@@ -14,6 +14,31 @@ var budgetController = (function() {
     //     }
     // }
 
+    // function constructors starts with capital letter
+    // Expense contructor
+    var Expense = function(id, description, value) {
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    }
+    // Income constuctor
+    var Income = function(id, description, value) {
+        this.id = id;
+        this.description = description;
+        this.value = value;
+    }
+
+    var data = {
+        allItems: {
+            exp: [],
+            inc: []
+        },
+        total: {
+            exp: 0,
+            icn: 0
+        }
+    }
+
 })();
 // -----------------------------------------------------
 
