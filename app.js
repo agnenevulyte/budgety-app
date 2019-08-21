@@ -115,6 +115,9 @@ var UIController = (function(){
             fieldsArray.forEach(function(current) {
                 current.value = "";
             });
+
+            // focus back on the first input field
+            fieldsArray[0].focus();
         },
 
         getDOMstrings: function() {
