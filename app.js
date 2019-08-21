@@ -55,7 +55,18 @@ var UIController = (function(){
 // connects budgetController & UIController
 var controller = (function(budgetCtrl, UICtrl){
 
-    var DOM = UICtrl.getDOMstrings();
+    var setupEventListeners =  function() {
+        var DOM = UICtrl.getDOMstrings();
+
+        document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
+
+        document.addEventListener('keypress', function(e) {
+            if (e.keyCode === 13 || e.which === 13) { // 13 is enter
+                ctrlAddItem();
+            }
+        })
+    }
+
 
     var ctrlAddItem = function() {
         // 1. get the field input data
@@ -67,14 +78,13 @@ var controller = (function(budgetCtrl, UICtrl){
         // 5. display the budget on UI 
     }
 
-    document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
-
-    document.addEventListener('keypress', function(e) {
-        if (e.keyCode === 13 || e.which === 13) { // 13 is enter
-            ctrlAddItem();
+    return {
+        init: function() {
+            setupEventListeners();
         }
-    })
-    
-// some code
+    }
 
 })(budgetController, UIController);
+
+// public initialization function INIT
+controller.init();
