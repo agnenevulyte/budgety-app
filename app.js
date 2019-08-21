@@ -29,26 +29,23 @@ var budgetController = (function() {
     return {
         addItem: function(type, des, val) {
             var newItem, ID;
-            // console.log(data)
             if (data.allItems[type].length > 0) {
                 // ID = last ID+1
-                // console.log("1   " , data.allItems)
                 ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
             } else {
                 ID = 0;
             }
 
-            // Create the new item based on "exp" or "inc" type
-            if (type === "exp") {
+            // Create the new item based on "expenses" or "income" type
+            if (type === "expense") {
                 newItem = new Expense(ID, des, val);
-            } else if (type === "inc") {
+            } else if (type === "income") {
                 newItem = new Income(ID, des, val);
             }
             
             // Push it into our data structure
             data.allItems[type].push(newItem);
             // Return the new element
-            // console.log("after  " , data)
             return newItem;
 
         },
@@ -70,18 +67,42 @@ var UIController = (function(){
         inputType: '.add__type',
         inputDescription:  ".add__description",
         inputValue: ".add__value",
-        inputBtn: ".add__btn"
-
+        inputBtn: ".add__btn",
+        incomeContainer: ".income__list",
+        expensesContainer: ".expenses__list"
     }
 
     return {
         getInput: function() {
             return {
                 // 1. get the field input data
-                type: document.querySelector(DOMstrings.inputType).value, // will be either inc ot exp
-                inputDescription: document.querySelector(DOMstrings.inputDescription).value,
-                inputValue: document.querySelector(DOMstrings.inputValue).value
+                type: document.querySelector(DOMstrings.inputType).value, // will be either income or expense
+                description: document.querySelector(DOMstrings.inputDescription).value,
+                value: document.querySelector(DOMstrings.inputValue).value
             }
+        },
+
+        // Adding the new code to the UI
+        addListItem: function(obj, type) {
+            var html, newHtml, element;
+            // Create html string with placeholder text
+            if (type === 'income') {
+                element = DOMstrings.incomeContainer;
+                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+            } else if (type === 'expense') {
+                element = DOMstrings.expensesContainer;
+                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+            }                        
+
+            // Replace the placeholder text with actual data
+            newHtml = html.replace('%id%', obj.id);
+            newHtml = newHtml.replace('%description%', obj.description);
+            newHtml = newHtml.replace('%value%', obj.value);
+            console.log(newHtml);
+
+            // insert HTML into DOM
+            document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+
         },
 
         getDOMstrings: function() {
@@ -118,7 +139,10 @@ var controller = (function(budgetCtrl, UICtrl){
         console.log("input   ",input)
         // 2. add the item to the budget controller
         newItem = budgetCtrl.addItem(input.type, input.description, input.value);
+        console.log("newItem-----------" , newItem);
         // 3. add the new item to the UI
+        var addListItem = UICtrl.addListItem(newItem, input.type);
+        console.log("addListItem-----------" , addListItem);
         // 4. calculate the budget
         // 5. display the budget on UI 
     }
