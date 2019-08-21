@@ -1,19 +1,5 @@
 // this module controls budget data
 var budgetController = (function() {
-   // some code
-   
-    // var x =23;
-    // var add = function(a) {
-    //     return x + a;
-    // }
-    
-    // // exposed to the public, because the closure was created here
-    // return {
-    //     publicTest: function(b) {
-    //         return add(b);
-    //     }
-    // }
-
     // function constructors starts with capital letter
     // Expense contructor
     var Expense = function(id, description, value) {
@@ -30,14 +16,46 @@ var budgetController = (function() {
 
     var data = {
         allItems: {
-            exp: [],
-            inc: []
+            expense: [],
+            income: []
         },
         total: {
-            exp: 0,
-            icn: 0
+            income: 0,
+            expense: 0
         }
     }
+
+    // adding a new item
+    return {
+        addItem: function(type, des, val) {
+            var newItem, ID;
+            // console.log(data)
+            if (data.allItems[type].length > 0) {
+                // ID = last ID+1
+                // console.log("1   " , data.allItems)
+                ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
+            } else {
+                ID = 0;
+            }
+
+            // Create the new item based on "exp" or "inc" type
+            if (type === "exp") {
+                newItem = new Expense(ID, des, val);
+            } else if (type === "inc") {
+                newItem = new Income(ID, des, val);
+            }
+            
+            // Push it into our data structure
+            data.allItems[type].push(newItem);
+            // Return the new element
+            // console.log("after  " , data)
+            return newItem;
+
+        },
+        // testing: function() {
+        //     console.log("data   " ,data)
+        // }
+    };
 
 })();
 // -----------------------------------------------------
@@ -94,10 +112,12 @@ var controller = (function(budgetCtrl, UICtrl){
 
 
     var ctrlAddItem = function() {
+        var input, newItem;
         // 1. get the field input data
-        var input = UICtrl.getInput();
-        console.log(input)
+        input = UICtrl.getInput();
+        console.log("input   ",input)
         // 2. add the item to the budget controller
+        newItem = budgetCtrl.addItem(input.type, input.description, input.value);
         // 3. add the new item to the UI
         // 4. calculate the budget
         // 5. display the budget on UI 
